@@ -49,13 +49,13 @@ A configurable Windows setup tool written in C#. It installs software packages (
    * To install:
 
      ```bash
-     ServiceInstaller.exe setup
+     SetupTool.exe setup
      ```
 
    * To uninstall:
 
      ```bash
-     ServiceInstaller.exe remove
+     SetupTool.exe remove
      ```
 
 ## Requirements
