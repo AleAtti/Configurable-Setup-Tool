@@ -1,0 +1,16 @@
+{
+    "offlinePackages": [
+        {
+            "Name": "nginx",
+            "Type": "zip",
+            "Source": "offline/nginx.zip",
+            "TargetDir": "C:/Server/nginx"
+        }
+    ],
+    "onlinePackages": [
+        {
+            "Name": "nginx",
+            "Type": "choco"
+        }
+    ]
+}
