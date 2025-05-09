@@ -2,6 +2,9 @@
 
 A configurable Windows setup tool written in C#. It installs software packages (online or offline), sets up required tools (like PM2, nginx, MariaDB, PHP, Composer), and registers a PM2 startup service for use in production systems.
 
+>[!WARNING]
+>Setup Tool is still buggy and not production ready!
+
 ## Features
 
 - Installs packages via Chocolatey (`choco`), NPM (`npm`), MSI, or ZIP
