@@ -1,4 +1,4 @@
-﻿namespace ServiceInstaller.model
+﻿namespace SetupTool.model
 {
         public class Package
         {

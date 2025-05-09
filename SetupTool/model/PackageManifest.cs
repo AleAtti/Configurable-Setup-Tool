@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace ServiceInstaller.model
+namespace SetupTool.model
 {
     public class PackageManifest
     {

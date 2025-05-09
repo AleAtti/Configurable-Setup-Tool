@@ -5,20 +5,22 @@ using System.Net.NetworkInformation;
 using System.IO.Compression;
 using System.Text.Json;
 using System.Collections.Generic;
-using ServiceInstaller.model;
+using SetupTool.model;
 
-namespace ServiceInstaller
+namespace SetupTool
 {
     partial class Program
     {
         static PackageManifest _manifest;
+
         static void Main(string[] args)
         {
-            Console.WriteLine("--- Konfigurierbares Setup-Tool ---\n");
+            Console.WriteLine("--- Configurable Setup Tool ---\n");
+
             string packagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "include\\packages.json");
             if (!File.Exists(packagePath))
             {
-                Console.WriteLine("Fehlende Datei: packages.json");
+                Console.WriteLine("Missing file: packages.json");
                 return;
             }
 
@@ -34,13 +36,13 @@ namespace ServiceInstaller
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Fehler beim Lesen der Konfiguration: " + ex.Message);
+                Console.WriteLine("Error reading configuration: " + ex.Message);
                 return;
             }
 
             if (args.Length == 0)
             {
-                Console.WriteLine("Bitte gib 'setup' oder 'remove' als Argument an.");
+                Console.WriteLine("Please specify 'setup' or 'remove' as argument.");
                 return;
             }
 
@@ -51,7 +53,7 @@ namespace ServiceInstaller
             else if (command == "remove")
                 RunRemoval();
             else
-                Console.WriteLine("Unbekanntes Argument. Bitte verwende 'setup' oder 'remove'.");
+                Console.WriteLine("Unknown argument. Please use 'setup' or 'remove'.");
         }
 
         static void RunSetup()
@@ -61,7 +63,6 @@ namespace ServiceInstaller
             if (online)
             {
                 EnsureChocolateyInstalled();
-
             }
 
             foreach (var pkg in _manifest.OnlinePackages)
@@ -88,7 +89,7 @@ namespace ServiceInstaller
 
             string pm2StartScript = CreatePm2StartupScript();
             RegisterWindowsService("PM2AutoStart", pm2StartScript);
-            Console.WriteLine("\nSetup abgeschlossen.");
+            Console.WriteLine("\nSetup completed.");
         }
 
         static void RunRemoval()
@@ -103,7 +104,7 @@ namespace ServiceInstaller
             string scriptPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pm2-startup.cmd");
             if (File.Exists(scriptPath)) File.Delete(scriptPath);
 
-            Console.WriteLine("\nEntfernung abgeschlossen.");
+            Console.WriteLine("\nRemoval completed.");
         }
 
         static bool CheckInternetConnection()
@@ -115,7 +116,6 @@ namespace ServiceInstaller
                     var reply = ping.Send("8.8.8.8", 1000);
                     return reply?.Status == IPStatus.Success;
                 }
-                
             }
             catch { return false; }
         }
@@ -124,7 +124,7 @@ namespace ServiceInstaller
         {
             if (!File.Exists("C:\\ProgramData\\chocolatey\\bin\\choco.exe"))
             {
-                Console.WriteLine("Chocolatey wird installiert...");
+                Console.WriteLine("Installing Chocolatey...");
                 Process.Start(new ProcessStartInfo
                 {
                     FileName = "powershell",
@@ -133,12 +133,12 @@ namespace ServiceInstaller
                     Verb = "runas"
                 })?.WaitForExit();
             }
-            else Console.WriteLine("Chocolatey ist bereits installiert.");
+            else Console.WriteLine("Chocolatey is already installed.");
         }
 
         static void InstallPackage(string name)
         {
-            Console.WriteLine($"Installiere {name} ...");
+            Console.WriteLine($"Installing {name} ...");
             Process.Start(new ProcessStartInfo
             {
                 FileName = "choco",
@@ -150,7 +150,7 @@ namespace ServiceInstaller
 
         static void UninstallPackage(string name)
         {
-            Console.WriteLine($"Deinstalliere {name} ...");
+            Console.WriteLine($"Uninstalling {name} ...");
             Process.Start(new ProcessStartInfo
             {
                 FileName = "choco",
@@ -162,7 +162,7 @@ namespace ServiceInstaller
 
         static void InstallGlobalNpmPackage(string name)
         {
-            Console.WriteLine($"Installiere NPM-Paket {name} ...");
+            Console.WriteLine($"Installing NPM package {name} ...");
             Process.Start(new ProcessStartInfo
             {
                 FileName = "npm",
@@ -175,7 +175,7 @@ namespace ServiceInstaller
         static void OfflineInstallNpmPackage(Package pkg)
         {
             if (!File.Exists(pkg.Source)) return;
-            Console.WriteLine($"Installiere NPM-Paket offline: {pkg.Name} ...");
+            Console.WriteLine($"Installing NPM package offline: {pkg.Name} ...");
             Process.Start(new ProcessStartInfo
             {
                 FileName = "npm",
@@ -191,13 +191,13 @@ namespace ServiceInstaller
             if (string.IsNullOrWhiteSpace(pkg.TargetDir)) return;
             if (Directory.Exists(pkg.TargetDir)) Directory.Delete(pkg.TargetDir, true);
             ZipFile.ExtractToDirectory(pkg.Source, pkg.TargetDir);
-            Console.WriteLine($"Entpackt {pkg.Name} nach {pkg.TargetDir}");
+            Console.WriteLine($"Extracted {pkg.Name} to {pkg.TargetDir}");
         }
 
         static void OfflineInstallMsi(Package pkg)
         {
             if (!File.Exists(pkg.Source)) return;
-            Console.WriteLine($"Installiere MSI-Paket {pkg.Name} ...");
+            Console.WriteLine($"Installing MSI package {pkg.Name} ...");
             Process.Start(new ProcessStartInfo
             {
                 FileName = pkg.Source,
@@ -215,7 +215,7 @@ namespace ServiceInstaller
 
         static void RegisterWindowsService(string serviceName, string executablePath)
         {
-            Console.WriteLine($"Registriere Windows-Dienst: {serviceName} ...");
+            Console.WriteLine($"Registering Windows service: {serviceName} ...");
             Process.Start(new ProcessStartInfo
             {
                 FileName = "sc.exe",
@@ -227,7 +227,7 @@ namespace ServiceInstaller
 
         static void RemoveWindowsService(string serviceName)
         {
-            Console.WriteLine($"Entferne Windows-Dienst: {serviceName} ...");
+            Console.WriteLine($"Removing Windows service: {serviceName} ...");
             Process.Start(new ProcessStartInfo
             {
                 FileName = "sc.exe",
