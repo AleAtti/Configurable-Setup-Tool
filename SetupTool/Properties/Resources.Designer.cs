@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SetupTool.Properties {
+namespace ServiceInstaller.Properties {
     using System;
     
     

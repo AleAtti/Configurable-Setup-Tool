@@ -6,10 +6,11 @@ using System.IO.Compression;
 using System.Text.Json;
 using System.Collections.Generic;
 using SetupTool.model;
+using ServiceInstaller.model;
 
 namespace SetupTool
 {
-    partial class Program
+    public class Program
     {
         static PackageManifest _manifest;
 
@@ -26,13 +27,10 @@ namespace SetupTool
 
             try
             {
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
+                
 
                 string json = File.ReadAllText("./include/packages.json");
-                _manifest = JsonSerializer.Deserialize<PackageManifest>(json, options);
+                _manifest = JsonModel<PackageManifest>.FromJson(json);
             }
             catch (Exception ex)
             {
@@ -107,7 +105,7 @@ namespace SetupTool
             Console.WriteLine("\nRemoval completed.");
         }
 
-        static bool CheckInternetConnection()
+        public static bool CheckInternetConnection()
         {
             try
             {
