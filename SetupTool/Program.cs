@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Collections.Generic;
 using SetupTool.model;
 using ServiceInstaller.model;
+using ServiceInstaller.Helper;
 
 namespace SetupTool
 {
@@ -17,19 +18,9 @@ namespace SetupTool
         static void Main(string[] args)
         {
             Console.WriteLine("--- Configurable Setup Tool ---\n");
-
-            string packagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "include\\packages.json");
-            if (!File.Exists(packagePath))
-            {
-                Console.WriteLine("Missing file: packages.json");
-                return;
-            }
-
             try
             {
-                
-
-                string json = File.ReadAllText("./include/packages.json");
+                string json = FileHelper.ReadFileFromCurrentDir("packages.json");
                 _manifest = JsonModel<PackageManifest>.FromJson(json);
             }
             catch (Exception ex)
