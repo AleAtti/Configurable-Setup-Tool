@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="PackageConfigPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Config\install-packages.json</Value>
+      <Value Profile="(Default)">config\install-packages.json</Value>
     </Setting>
   </Settings>
 </SettingsFile>

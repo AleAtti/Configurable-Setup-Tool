@@ -25,7 +25,7 @@ namespace ServiceInstaller.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Config\\install-packages.json")]
+        [global::System.Configuration.DefaultSettingValueAttribute("config\\install-packages.json")]
         public string PackageConfigPath {
             get {
                 return ((string)(this["PackageConfigPath"]));
