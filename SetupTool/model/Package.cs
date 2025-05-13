@@ -1,11 +1,27 @@
-﻿namespace SetupTool.model
+﻿using System.Text.Json.Serialization;
+
+namespace SetupTool.model
 {
-        public class Package
-        {
-            public string Name { get; set; } = "";
-            public string Type { get; set; } = "choco"; // choco, npm, zip, msi
-            public string Arguments { get; set; } = "";
-            public string Source { get; set; } = ""; // e.g. for offline zip/msi
-            public string TargetDir { get; set; } = ""; // optional
-        }
+    public enum PackageType
+    {
+        Choco,
+        Npm,
+        Zip,
+        Msi
+    }
+
+    public class Package
+    {
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = "";
+        [JsonPropertyName("type")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public PackageType Type { get; set; } = PackageType.Choco;
+        [JsonPropertyName("arguments")]
+        public string Arguments { get; set; } = null;
+        [JsonPropertyName("source")]
+        public string Source { get; set; } = null; // e.g. for offline zip/msi
+        [JsonPropertyName("targetDir")]
+        public string TargetDir { get; set; } = null; // optional
+    }
 }
