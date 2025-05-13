@@ -1,71 +1,60 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ServiceInstaller.Helper
+namespace SetupTool.Helper
 {
-    public class FileHelper
+    public static class FileHelper
     {
-        public static string GetFileName(string path)
-        {
-            if (string.IsNullOrEmpty(path))
-            {
-                throw new ArgumentNullException(nameof(path), "Path cannot be null or empty");
-            }
-            return Path.GetFileName(path);
-        }
-        public static string GetDirectoryName(string path)
-        {
-            if (string.IsNullOrEmpty(path))
-            {
-                throw new ArgumentNullException(nameof(path), "Path cannot be null or empty");
-            }
-            return Path.GetDirectoryName(path);
-        }
-
-        public static string GetAppCurrentDir(string fileName)
-        {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                throw new ArgumentNullException(nameof(fileName), "File name cannot be null or empty");
-            }
-
-            string currentDirectory = Directory.GetCurrentDirectory();
-            string relativePath = Path.Combine(currentDirectory, fileName);
-            return relativePath;
-        }
-
+        /// <summary>
+        /// Reads the content of a file from the current directory.
+        /// </summary>
+        /// <param name="fileName">The name of the file to read.</param>
+        /// <returns>The content of the file as a string.</returns>
         public static string ReadFileFromCurrentDir(string fileName)
         {
-            if (string.IsNullOrEmpty(fileName))
+            try
             {
-                throw new ArgumentNullException(nameof(fileName), "File name cannot be null or empty");
+                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+                if (!File.Exists(filePath))
+                    throw new FileNotFoundException($"File not found: {filePath}");
+
+                return File.ReadAllText(filePath);
             }
-
-            
-            string relativePath = GetAppCurrentDir(fileName);
-
-            if (!File.Exists(relativePath))
+            catch (Exception ex)
             {
-                throw new FileNotFoundException(relativePath);
+                Console.WriteLine($"Error reading file '{fileName}': {ex.Message}");
+                throw;
             }
-            return File.ReadAllText(fileName, Encoding.UTF8);
         }
 
-        public static void WriteFileFromCurrentDir(string fileName, string content)
+        /// <summary>
+        /// Writes content to a file in the current directory.
+        /// </summary>
+        /// <param name="fileName">The name of the file to write to.</param>
+        /// <param name="content">The content to write to the file.</param>
+        public static void WriteFileToCurrentDir(string fileName, string content)
         {
-            if (!File.Exists(fileName))
+            try
             {
-                throw new FileNotFoundException(fileName);
+                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+                File.WriteAllText(filePath, content);
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error writing to file '{fileName}': {ex.Message}");
+                throw;
+            }
+        }
 
-            using (StreamWriter writer = new StreamWriter(GetAppCurrentDir(fileName), append: false, Encoding.UTF8)) { 
-                writer.Write(content);
-            }
-            
+        /// <summary>
+        /// Checks if a file exists in the current directory.
+        /// </summary>
+        /// <param name="fileName">The name of the file to check.</param>
+        /// <returns>True if the file exists, otherwise false.</returns>
+        public static bool FileExistsInCurrentDir(string fileName)
+        {
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+            return File.Exists(filePath);
         }
     }
 }
